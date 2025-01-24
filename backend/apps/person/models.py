@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from apps.location.models import Street
 from django.db import models
 
@@ -23,6 +24,7 @@ class Person(models.Model):
     primary_email = models.TextField(max_length=320, null=True, blank=True)
     occupation = models.ForeignKey(Occupation, on_delete=models.PROTECT)
     document = models.TextField(max_length=50)
+    user = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
 
     def __str__(self):
         return self.name

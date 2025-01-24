@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from apps.person.models import Person
 
 UserModel = get_user_model()
 
@@ -21,3 +22,8 @@ class SiginSerializer(serializers.ModelSerializer):
         model = UserModel
         # Tuple of serialized model fields (see link [2])
         fields = ( "id", "username", "password", )
+
+class PersonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Person
+        fields = "__all__"
