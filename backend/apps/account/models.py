@@ -5,7 +5,7 @@ from django.db import models
 class Account(models.Model):
     account_holder = models.ForeignKey(Person, on_delete=models.PROTECT)
     institution_branch = models.ForeignKey(Branch, on_delete=models.PROTECT)
-    identifier = models.CharField(max_length=6)
+    identifier = models.CharField(max_length=6, unique=True)
     last_login = models.DateTimeField(auto_now=True)
     overdraft_protection = models.BooleanField(default=True)
     overdraft_limit = models.BigIntegerField()

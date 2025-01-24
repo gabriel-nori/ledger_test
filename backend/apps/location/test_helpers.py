@@ -1,4 +1,4 @@
-from apps.location.models import (
+from apps.location.models import(
     Continent,
     Country,
     State,
@@ -9,98 +9,118 @@ from apps.location.models import (
     Street
 )
 
-continent = Continent(name="America")
+class TestObjects():
+    continent = None
+    brazil = None
+    argentina = None
+    united_states = None
+    germany = None
+    portugal = None
+    sao_paulo_state = None
+    buenos_aires_province = None
+    buenos_aires_county = None
+    sao_paulo_district = None
+    sao_paulo_city = None
+    san_isidro_city = None
+    lapa = None
+    acasusso_neighborhood = None
+    street = None
+    acassuso = None
+    croata = None
 
-brazil = Country(
-    continent=continent,
-    name="Brazil",
-    code="BR"
-)
+    def create(self):
+        self.continent = Continent.objects.get_or_create(name="America")[0]
 
-argentina = Country(
-    continent=continent,
-    name="Argentina",
-    code="AR"
-)
+        self.brazil = Country.objects.get_or_create(
+            continent=self.continent,
+            name="Brazil",
+            code="BR"
+        )[0]
 
-united_states = Country(
-    continent=continent,
-    name="United States",
-    code="US"
-)
+        self.argentina = Country.objects.get_or_create(
+            continent=self.continent,
+            name="Argentina",
+            code="AR"
+        )[0]
 
-germany = Country(
-    continent=continent,
-    name="Germany",
-    code="DE"
-)
+        self.united_states = Country.objects.get_or_create(
+            continent=self.continent,
+            name="United States",
+            code="US"
+        )[0]
 
-portugal = Country(
-    continent=continent,
-    name="Portugal",
-    code="PT"
-)
+        self.germany = Country.objects.get_or_create(
+            continent=self.continent,
+            name="Germany",
+            code="DE"
+        )[0]
 
-sao_paulo_state = State(
-    country=brazil,
-    name="São Paulo",
-    type="S"
-)
+        self.portugal = Country.objects.get_or_create(
+            continent=self.continent,
+            name="Portugal",
+            code="PT"
+        )[0]
 
-buenos_aires_province = State(
-    country=argentina,
-    name="Buenos Aires",
-    type="P"
-)
+        self.sao_paulo_state = State.objects.get_or_create(
+            country=self.brazil,
+            name="São Paulo",
+            type="S"
+        )[0]
 
-buenos_aires_county = County(
-    state=buenos_aires_province,
-    name="Buenos Aires",
-    type="C"
-)
+        self.buenos_aires_province = State.objects.get_or_create(
+            country=self.argentina,
+            name="Buenos Aires",
+            type="P"
+        )[0]
 
-sao_paulo_district = County(
-    state=sao_paulo_state,
-    name="São Paulo",
-    type="D"
-)
+        self.buenos_aires_county = County.objects.get_or_create(
+            state=self.buenos_aires_province,
+            name="Buenos Aires",
+            type="C"
+        )[0]
 
-sao_paulo_city = City(
-    county=sao_paulo_district,
-    name="São Paulo",
-    type="C"
-)
+        self.sao_paulo_district = County.objects.get_or_create(
+            state=self.sao_paulo_state,
+            name="São Paulo",
+            type="D"
+        )[0]
 
-san_isidro_city = City(
-    county=buenos_aires_county,
-    name="San Isidro",
-    type="C"
-)
+        self.sao_paulo_city = City.objects.get_or_create(
+            county=self.sao_paulo_district,
+            name="São Paulo",
+            type="C"
+        )[0]
 
-lapa = Neighborhood(
-    country=sao_paulo_city,
-    name="São Paulo",
-    type="N"
-)
+        self.san_isidro_city = City.objects.get_or_create(
+            county=self.buenos_aires_county,
+            name="San Isidro",
+            type="C"
+        )[0]
 
-acasusso_neighborhood = Neighborhood(
-    country=san_isidro_city,
-    name="Acassuso",
-    type="N"
-)
+        self.lapa = Neighborhood.objects.get_or_create(
+            country=self.sao_paulo_city,
+            name="São Paulo",
+            type="N"
+        )[0]
 
-street = StreetType(name="Street")
+        self.acasusso_neighborhood = Neighborhood.objects.get_or_create(
+            country=self.san_isidro_city,
+            name="Acassuso",
+            type="N"
+        )[0]
 
-acassuso = Street(
-    neighborhood=acasusso_neighborhood,
-    name="Acassuso",
-    type=street,
-    postal_code="1641"
-)
+        self.street = StreetType.objects.get_or_create(name="Street")[0]
 
-croata = Street(
-    neighborhood=lapa,
-    name="Croata",
-    type=street,
-    postal_code="05056-020"
-)
+        self.acassuso = Street.objects.get_or_create(
+            neighborhood=self.acasusso_neighborhood,
+            name="Acassuso",
+            type=self.street,
+            postal_code="1641"
+        )[0]
+
+        self.croata = Street.objects.get_or_create(
+        neighborhood=self.lapa,
+        name="Croata",
+        type=self.street,
+        postal_code="05056-020"
+    )[0]

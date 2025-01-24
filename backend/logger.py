@@ -1,4 +1,4 @@
-from app.config import settings
+from config import settings
 from datetime import datetime
 import json
 
@@ -23,38 +23,38 @@ class Logger:
 
         self.level_index = log_level_index_ids[self.level.lower()]
 
-    def debug(self, message: str, extra: dict = None, trace = None):
+    def debug(self, message: str, extras: dict = None, trace = None):
         level = "debug"
         if self.level_index <= log_level_index_ids[level]:
-            self.__log__(message, level, extra, trace = None)
+            self.__log__(message, level, extras, trace = None)
 
-    def info(self, message: str, extra: dict = None, trace = None):
+    def info(self, message: str, extras: dict = None, trace = None):
         level = "info"
         if self.level_index <= log_level_index_ids[level]:
-            self.__log__(message, level, extra, trace = None)
+            self.__log__(message, level, extras, trace = None)
 
-    def warning(self, message: str, extra: dict = None, trace = None):
+    def warning(self, message: str, extras: dict = None, trace = None):
         level = "warning"
         if self.level_index <= log_level_index_ids[level]:
-            self.__log__(message, level, extra, trace = None)
+            self.__log__(message, level, extras, trace = None)
 
-    def error(self, message: str, extra: dict = None, trace = None):
+    def error(self, message: str, extras: dict = None, trace = None):
         level = "error"
         if self.level_index <= log_level_index_ids[level]:
-            self.__log__(message, level, extra, trace = None)
+            self.__log__(message, level, extras, trace = None)
 
-    def critical(self, message: str, extra: dict = None, trace = None):
+    def critical(self, message: str, extras: dict = None, trace = None):
         level = "critical"
         if self.level_index <= log_level_index_ids[level]:
-            self.__log__(message, level, extra, trace = None)
+            self.__log__(message, level, extras, trace = None)
 
-    def __log__(self, message: str, level: str, extra: dict = None, trace = None):
+    def __log__(self, message: str, level: str, extras: dict = None, trace = None):
         log_message = {
             "timestamp": str(datetime.now()),
             "app_name": self.app_name,
             "log_level": level,
             "trace": trace,
             "message": message,
-            "extra": extra
+            "extras": extras
         }
         print(json.dumps(log_message, indent=2))

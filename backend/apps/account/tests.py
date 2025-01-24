@@ -1,14 +1,28 @@
 from apps.account import test_helpers as accountHelper
 from apps.financial_institution.models import Branch
-from django.test import TestCase
+from apps.person.models import Person, Occupation
+from django.contrib.auth import get_user_model
 from apps.account.models import Account
-from apps.person.models import Person
 from apps.account import services
+from django.test import TestCase
+from datetime import date
 
 class AccountTest(TestCase):
     def setUp(self):
         kyle_account = Account(
-            account_holder=Person.objects.get(primary_email="michael@teste.com"),
+            account_holder=Person.objects.get_or_create(
+                primary_email="michael@teste.com",
+                defaults={
+                    "name":"Michael Kyle",
+                    "birthday":date(1960, 9, 4),
+                    "sex":"M",
+                    "gender":"M",
+                    "primary_email":"michael@teste.com",
+                    "occupation":Occupation.objects.get_or_create(name="developer")[0],
+                    "document":"michael",
+                    "user":get_user_model().objects.get_or_create(username="test0")[0]
+                }
+            )[0],
             institution_branch=Branch.objects.get(code="09832"),
             identifier=services.generate_account_identifier(),
             overdraft_protection=True,
@@ -17,7 +31,19 @@ class AccountTest(TestCase):
         )
 
         fernando_account = Account(
-            account_holder=Person.objects.get(primary_email="fernando@teste.com"),
+            account_holder=Person.objects.get_or_create(
+                primary_email="michael@teste.com",
+                defaults={
+                    "name":"Fernando",
+                    "birthday":date(1960, 9, 4),
+                    "sex":"M",
+                    "gender":"M",
+                    "primary_email":"michael@teste.com",
+                    "occupation":Occupation.objects.get_or_create(name="developer")[0],
+                    "document":"michael",
+                    "user":get_user_model().objects.get_or_create(username="test2")[0]
+                }
+            )[0],
             institution_branch=Branch.objects.get(code="12409"),
             identifier=services.generate_account_identifier(),
             overdraft_protection=True,
@@ -26,7 +52,19 @@ class AccountTest(TestCase):
         )
 
         maria_account = Account(
-            account_holder=Person.objects.get(primary_email="maria@teste.com"),
+            account_holder=Person.objects.get_or_create(
+                primary_email="michael@teste.com",
+                defaults={
+                    "name":"Maria",
+                    "birthday":date(1960, 9, 4),
+                    "sex":"M",
+                    "gender":"M",
+                    "primary_email":"michael@teste.com",
+                    "occupation":Occupation.objects.get_or_create(name="developer")[0],
+                    "document":"michael",
+                    "user":get_user_model().objects.get_or_create(username="test")[0]
+                }
+            )[0],
             institution_branch=Branch.objects.get(code="95430"),
             identifier=services.generate_account_identifier(),
             overdraft_protection=False,
