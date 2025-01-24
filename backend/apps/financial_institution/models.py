@@ -23,3 +23,6 @@ class Branch(models.Model):
     floor = models.IntegerField(null=True, blank=True)
     room = models.IntegerField(null=True, blank=True)
     code = models.CharField(max_length=5)
+
+    def __str__(self):
+        return f"{self.institution.code}-{self.code}"
