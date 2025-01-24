@@ -1,4 +1,5 @@
 from apps.location.models import Country, Street
+from apps.person.models import Person
 from django.db import models
 
 class InstitutionType(models.Model):
@@ -26,3 +27,11 @@ class Branch(models.Model):
 
     def __str__(self):
         return f"{self.institution.code}-{self.code}"
+    
+class BranchClient(models.Model):
+    client = models.ForeignKey(Person, on_delete=models.PROTECT)
+    branch = models.ForeignKey(Branch, on_delete=models.PROTECT)
+    client_since = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.branch.code} - {self.client.name}"
