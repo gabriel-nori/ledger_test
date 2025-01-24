@@ -1,4 +1,4 @@
-from apps.account.models import Account, AccountTransactionHistory
+from apps.account.models import Account, AccountTransactionHistory, MoneyTransfer
 from apps.financial_institution.models import Branch
 from apps.person import utils as personUtils
 from apps.person.models import Person
@@ -100,6 +100,11 @@ def create_transfer(origin: Account, destination: Account, ammount: int):
         take_money(origin, ammount)
         try:
             put_money(destination, ammount)
+            MoneyTransfer.objects.create(
+                origin=origin,
+                destination=destination,
+                ammount=ammount
+            )
             return True
         except ValueError as v:
             logger.error(
@@ -107,11 +112,13 @@ def create_transfer(origin: Account, destination: Account, ammount: int):
                 extras={
                     "origin_account": origin.identifier,
                     "destination_account": destination.identifier,
-                    "ammount": ammount
+                    "ammount": ammount,
+                    "available_balance": origin.balance
                 }
             )
             # Rollback operation
             put_money(origin, ammount, refund=True)
+            raise ValueError("Failed to insert money on destination")
 
     except ValueError as v:
         logger.error(
@@ -119,6 +126,8 @@ def create_transfer(origin: Account, destination: Account, ammount: int):
             extras={
                 "origin_account": origin.identifier,
                 "destination_account": destination.identifier,
-                "ammount": ammount
+                "ammount": ammount,
+                "available_balance": origin.balance
             }
         )
+        raise ValueError("Insufficient funds available")
