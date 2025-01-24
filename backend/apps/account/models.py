@@ -13,3 +13,15 @@ class Account(models.Model):
 
     def __str__(self):
         return f"{self.institution_branch}-{self.identifier}"
+    
+class AccountTransactionHistory(models.Model):
+    OPERATION_TYPES = [
+        ("I", "Income"),
+        ("O", "Outcome"),
+        ("R", "Refund Income"),
+        ("C", "Refund Outcome")
+    ]
+    account = models.ForeignKey(Account, on_delete=models.PROTECT)
+    operation_type = models.CharField(choices=OPERATION_TYPES, max_length=1)
+    ammount = models.BigIntegerField()
+    timestamp = models.DateTimeField(auto_now=True)
