@@ -1,4 +1,4 @@
-from django.contrib.auth import get_user_model
+from apps.location.models import Street
 from django.db import models
 
 # Create your models here.
@@ -33,23 +33,12 @@ class AddressType(models.Model):
     def __str__(self):
         return self.name
     
-class StreetType(models.Model):
-    name = models.TextField(max_length=50)
-
-    def __str__(self):
-        return self.name
-    
 class PersonAddress(models.Model):
-    """
-        This is a simplified way of representing a normalized address.
-        If I was going to develop a fully optimized system, the tables should be
-        organized hierarchically more like a Geographic database
-        In a fully implemented version, I'd change this model to another app
-        and the models in there should look like this:
-        Continent → Country → State/Province → County/District → City/Town → Neighborhood/Community
-    """
-    street_type = models.ForeignKey(StreetType, on_delete=models.PROTECT)
+    person = models.ForeignKey(Person, on_delete=models.PROTECT)
     address_type = models.ForeignKey(AddressType, on_delete=models.PROTECT) # home, work...
-    street = models.TextField()
+    street = models.ForeignKey(Street, on_delete=models.PROTECT)
     number = models.IntegerField()
     complement = models.TextField(max_length=150)
+
+    def __str__(self):
+        return f"{self.person.name}@{self.address_type.name}"
