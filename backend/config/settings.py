@@ -54,7 +54,10 @@ DJANGO_APPS = [
 USER_APPS =[
     'apps.apps.AppsConfig',
     'api.apps.ApiConfig',
-    'apps.person.apps.PersonConfig'
+    'apps.person.apps.PersonConfig',
+    'apps.account.apps.AccountConfig',
+    'apps.financial_institution.apps.FinancialInstitutionConfig',
+    'apps.location.apps.LocationConfig'
 ]
 
 THIRD_PARTY = [
