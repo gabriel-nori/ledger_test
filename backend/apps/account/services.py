@@ -23,4 +23,29 @@ def build_account(user: Person, branch: Branch) -> Account|None:
     if not personUtils.check_18_older(user.birthday):
         return
     
-    
+def take_money(account:Account, ammount: int) -> bool:
+    """
+    This method receives the account object and the ammount to be taken in cents.
+    if the ammount is less than what is available, it checks if overdraft is possible.
+    """
+    if ammount <= 0:
+        return False
+    if account.balance >= ammount:
+        account.balance -= ammount
+        return True
+    elif account.overdraft_protection:
+        return False
+    else:
+        if account.overdraft_limit + account.balance > ammount:
+            account.balance -= ammount
+            return True
+        else:
+            return False
+        
+def put_money(account:Account, ammount: int) -> bool:
+    if ammount <= 0:
+        return False
+    balance_before = account.balance
+    account.balance += ammount
+    if account.balance == balance_before + ammount:
+        return True
