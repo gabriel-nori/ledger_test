@@ -54,7 +54,6 @@ DJANGO_APPS = [
 
 USER_APPS =[
     'apps.apps.AppsConfig',
-    'api.apps.ApiConfig',
     'apps.person.apps.PersonConfig',
     'apps.account.apps.AccountConfig',
     'apps.financial_institution.apps.FinancialInstitutionConfig',
@@ -63,10 +62,19 @@ USER_APPS =[
 ]
 
 THIRD_PARTY = [
-    'jazzmin'
+    'jazzmin',
+    'rest_framework',
 ]
 
 INSTALLED_APPS = THIRD_PARTY + DJANGO_APPS + USER_APPS
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
