@@ -1,3 +1,5 @@
+from apps.transfer.models import MoneyTransfer
 from django.test import TestCase
 
-# Create your tests here.
+# class TestTransfer(TestCase):
+#     def setup(self):

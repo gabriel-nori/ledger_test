@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 import base64
+import sys
 import os
 
 env_file_path = os.getcwd() + "/.env"
@@ -161,3 +162,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+if 'test' in sys.argv:
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'mydatabase'
+    }
