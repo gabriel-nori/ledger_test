@@ -1,31 +1,42 @@
-from apps.financial_institution import test_helpers as fiHelper
+from apps.financial_institution.test_helpers import TestObjects as FinancialObjects
+from apps.person.test_helpers import TestObjects as PersonObjects
 from apps.account.services import generate_account_identifier
-from apps.person import test_helpers as personHelper
 from apps.account.models import Account
 
-kyle_account = Account(
-    account_holder=personHelper.approved_client,
-    institution_branch=fiHelper.not_a_bank_01,
-    identifier=generate_account_identifier(),
-    overdraft_protection=True,
-    overdraft_limit=250000,
-    balance=0
-)
+class TestObjects():
+    kyle_account = None
+    fernando_account = None
+    maria_account = None
 
-fernando_account = Account(
-    account_holder=personHelper.fernando_ok,
-    institution_branch=fiHelper.alpha_bank_01,
-    identifier=generate_account_identifier(),
-    overdraft_protection=True,
-    overdraft_limit=250000,
-    balance=0
-)
+    def create(self):
+        self.person_objects = PersonObjects()
+        self.person_objects.create()
+        self.financial_objects = FinancialObjects()
+        self.financial_objects.create()
 
-maria_account = Account(
-    account_holder=personHelper.maria_ok,
-    institution_branch=fiHelper.good_savings_bank_01,
-    identifier=generate_account_identifier(),
-    overdraft_protection=False,
-    overdraft_limit=250000,
-    balance=0
-)
+        self.kyle_account = Account.objects.get_or_create(
+            account_holder=self.person_objects.michael_ok,
+            institution_branch=self.financial_objects.not_a_bank_01,
+            identifier=generate_account_identifier(),
+            overdraft_protection=True,
+            overdraft_limit=250000,
+            balance=0
+        )[0]
+
+        self.fernando_account = Account.objects.get_or_create(
+            account_holder=self.person_objects.fernando_ok,
+            institution_branch=self.financial_objects.alpha_bank_01,
+            identifier=generate_account_identifier(),
+            overdraft_protection=True,
+            overdraft_limit=250000,
+            balance=0
+        )[0]
+
+        self.maria_account = Account.objects.get_or_create(
+            account_holder=self.person_objects.maria_ok,
+            institution_branch=self.financial_objects.good_savings_bank_01,
+            identifier=generate_account_identifier(),
+            overdraft_protection=False,
+            overdraft_limit=250000,
+            balance=0
+        )[0]
