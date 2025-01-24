@@ -34,7 +34,7 @@ class County(models.Model):
     
 class City(models.Model):
     TYPES = [("C", "City"), ("T", "Town")]
-    country = models.ForeignKey(Country, on_delete=models.PROTECT)
+    county = models.ForeignKey(County, on_delete=models.PROTECT)
     name = models.TextField(max_length=50)
     type = models.CharField(choices=TYPES, default="C", max_length=1)
 
@@ -57,9 +57,9 @@ class StreetType(models.Model):
         return self.name
     
 class Street(models.Model):
-    country = models.ForeignKey(City, on_delete=models.PROTECT)
+    neighborhood = models.ForeignKey(Neighborhood, on_delete=models.PROTECT)
     name = models.TextField(max_length=50)
-    type = models.ForeignKey(Neighborhood, on_delete=models.PROTECT)
+    type = models.ForeignKey(StreetType, on_delete=models.PROTECT)
     postal_code = models.TextField()
 
     def __str__(self):
