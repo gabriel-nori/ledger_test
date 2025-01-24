@@ -57,7 +57,8 @@ USER_APPS =[
     'apps.person.apps.PersonConfig',
     'apps.account.apps.AccountConfig',
     'apps.financial_institution.apps.FinancialInstitutionConfig',
-    'apps.location.apps.LocationConfig'
+    'apps.location.apps.LocationConfig',
+    'apps.transfer.apps.TransferConfig'
 ]
 
 THIRD_PARTY = [
