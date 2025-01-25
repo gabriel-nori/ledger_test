@@ -17,6 +17,3 @@ class AccountSerializer(serializers.ModelSerializer):
             'overdraft_limit',
             'balance',
         ]
-
-class AccountCreateSerializer(serializers.Serializer):
-    branch = serializers.IntegerField()
