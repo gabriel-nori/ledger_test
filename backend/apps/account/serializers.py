@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from apps.account.models import Account
+from django.core.serializers.json import Serializer
+from apps.account.models import Account, AccountTransactionHistory, MoneyTransfer
 
 class AccountSerializer(serializers.ModelSerializer):
     account_holder_name = serializers.CharField(source='account_holder.name', read_only=True)
@@ -17,3 +18,13 @@ class AccountSerializer(serializers.ModelSerializer):
             'overdraft_limit',
             'balance',
         ]
+
+class AccountTransactionHistorySerializer(Serializer):
+    class Meta:
+        Model = AccountTransactionHistory
+        fields = "__all__"
+
+class MoneyTransferSerializer(Serializer):
+    class Meta:
+        Model = MoneyTransfer
+        fields = "__all__"

@@ -1,4 +1,5 @@
-from apps.account.serializers import AccountSerializer
+from apps.account.serializers import AccountSerializer, AccountTransactionHistorySerializer, MoneyTransferSerializer
+from apps.account.models import Account, AccountTransactionHistory, MoneyTransfer
 from apps.account.permissions import IsOwnerOrSuperuser
 from rest_framework.permissions import IsAuthenticated
 from apps.financial_institution.models import Branch
@@ -6,7 +7,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.filters import SearchFilter
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from apps.account.models import Account
+from django.http import HttpResponse
 from rest_framework import status
 from apps.account import services
 
@@ -61,3 +62,22 @@ class AccountView(ModelViewSet):
             return Response(status=status.HTTP_200_OK)
         except ValueError:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+    @action(detail=True, methods=["get"])
+    def list_transfers_received(self, request, pk):
+        transfers = MoneyTransfer.objects.filter(origin__id=pk)
+        serializer = MoneyTransferSerializer()
+        return HttpResponse(serializer.serialize(transfers))
+
+    @action(detail=True, methods=["get"])
+    def list_transfers_sent(self, request, pk):
+        transfers = MoneyTransfer.objects.filter(destination__id=pk)
+        serializer = MoneyTransferSerializer()
+        return HttpResponse(serializer.serialize(transfers))
+    
+    @action(detail=True, methods=["get"])
+    def list_history(self, request, pk):
+        user = request.user
+        history = AccountTransactionHistory.objects.filter(account__id=pk, account__account_holder__user=user)
+        serializer = AccountTransactionHistorySerializer()
+        return HttpResponse(serializer.serialize(history))
