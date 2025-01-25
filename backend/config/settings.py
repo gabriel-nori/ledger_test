@@ -50,6 +50,7 @@ DJANGO_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_filters',
 ]
 
 USER_APPS =[
@@ -63,6 +64,7 @@ USER_APPS =[
 THIRD_PARTY = [
     'jazzmin',
     'rest_framework',
+    'drf_yasg',
 ]
 
 INSTALLED_APPS = THIRD_PARTY + DJANGO_APPS + USER_APPS
@@ -72,7 +74,16 @@ REST_FRAMEWORK = {
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+    ],
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+}
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Basic': {
+            'type': 'basic'
+        }
+    }
 }
 
 MIDDLEWARE = [
