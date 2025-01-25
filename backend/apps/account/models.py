@@ -32,6 +32,6 @@ class MoneyTransfer(models.Model):
     origin = models.ForeignKey(Account, on_delete=models.PROTECT, related_name="transfer_origin")
     destination = models.ForeignKey(Account, on_delete=models.PROTECT, related_name="transfer_destination")
     ammount = models.BigIntegerField()
-    transaction_id = models.UUIDField(default=uuid.uuid4)
+    transaction_id = models.UUIDField(default=uuid.uuid4, primary_key=True)
     timestamp = models.DateTimeField(auto_now=True)
     status = models.CharField(choices=STATUS_OPTIONS, max_length=1, default="C")
