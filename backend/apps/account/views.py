@@ -93,6 +93,20 @@ class MoneyTransferView(ReadOnlyModelViewSet):
     serializer_class = MoneyTransferExpandedSerializer
     permission_classes = [IsAuthenticated]
 
-    @action(detail=True, methods=["get"])
+    @action(detail=True, methods=["delete"])
     def cancel_transfer(self, request, pk):
         user = request.user
+        transfer: MoneyTransfer = None
+        try:
+            transfer = MoneyTransfer.objects.get(transaction_id=pk)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+        if not transfer.origin.account_holder.user == user:
+            return Response(status=status.HTTP_403_NOT_AUTHORIZED)
+        
+        try:
+            services.cancel_transaction(transfer)
+            return Response(status=status.HTTP_200_OK)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
