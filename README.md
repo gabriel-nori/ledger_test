@@ -1,6 +1,6 @@
-# Django App Base
+# Django Ledger APP
 
-A starter template for quickly setting up new Django applications with best practices, reusable configurations, and essential tools.
+This is a simple ledger application, allowing to create new financial accounts, transactions and keep track of the balance
 
 ## Features
 
@@ -18,15 +18,15 @@ A starter template for quickly setting up new Django applications with best prac
 - Python 3.8+
 - Django 4.x
 - Docker (optional, for containerized development)
-- PostgreSQL or other database as required
+- PostgreSQL
 
 ## Getting Started
 
 ### 1. Clone the Repository
 
 ```bash
-git clone <repository-url> django-app-base
-cd django-app-base
+git clone <repository-url>
+cd higlobe_dev_test
 ```
 
 ### 2. Set Up a Virtual Environment
@@ -87,11 +87,11 @@ README.md        # Project documentation
 
 1. Build the Docker image:
    ```bash
-   docker build -t django-app-base .
+   docker build -t higlobe_dev_test .
    ```
 2. Run the container:
    ```bash
-   docker run -d -p 8000:8000 --env-file .env django-app-base
+   docker run -d -p 8000:8000 --env-file .env higlobe_dev_test
    ```
 
 ### Manual Deployment
@@ -107,21 +107,3 @@ Run tests with:
 ```bash
 python manage.py test
 ```
-
-## Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository.
-2. Create a new feature branch (`git checkout -b feature-name`).
-3. Commit changes (`git commit -m 'Add some feature'`).
-4. Push to the branch (`git push origin feature-name`).
-5. Open a pull request.
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
-
-## Acknowledgements
-
-Inspired by Django's best practices and community guidelines.
