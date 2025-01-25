@@ -21,10 +21,15 @@ class AccountSerializer(serializers.ModelSerializer):
 
 class AccountTransactionHistorySerializer(Serializer):
     class Meta:
-        Model = AccountTransactionHistory
+        model = AccountTransactionHistory
         fields = "__all__"
 
 class MoneyTransferSerializer(Serializer):
     class Meta:
-        Model = MoneyTransfer
+        model = MoneyTransfer
+        fields = "__all__"
+
+class MoneyTransferExpandedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MoneyTransfer
         fields = "__all__"

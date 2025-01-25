@@ -1,7 +1,7 @@
 from apps.financial_institution.views import InstitutionView, BranchView
 from apps.person.views import SigninView, ClientView
 from rest_framework.schemas import get_schema_view
-from apps.account.views import AccountView
+from apps.account.views import AccountView, MoneyTransferView
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 from django.contrib import admin
@@ -24,6 +24,7 @@ router.register(r'api/account', AccountView)
 router.register(r'api/client', ClientView, basename='client')
 router.register(r'api/institution', InstitutionView, basename='institution')
 router.register(r'api/branch', BranchView, basename='branch')
+router.register(r'api/money_transfer', MoneyTransferView, basename='money_transfer')
 
 urlpatterns = [
     path('', include(router.urls)),

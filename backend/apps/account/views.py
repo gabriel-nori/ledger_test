@@ -1,5 +1,11 @@
-from apps.account.serializers import AccountSerializer, AccountTransactionHistorySerializer, MoneyTransferSerializer
+from apps.account.serializers import (
+    AccountSerializer,
+    AccountTransactionHistorySerializer,
+    MoneyTransferSerializer,
+    MoneyTransferExpandedSerializer
+)
 from apps.account.models import Account, AccountTransactionHistory, MoneyTransfer
+from rest_framework.viewsets import ReadOnlyModelViewSet
 from apps.account.permissions import IsOwnerOrSuperuser
 from rest_framework.permissions import IsAuthenticated
 from apps.financial_institution.models import Branch
@@ -81,3 +87,12 @@ class AccountView(ModelViewSet):
         history = AccountTransactionHistory.objects.filter(account__id=pk, account__account_holder__user=user)
         serializer = AccountTransactionHistorySerializer()
         return HttpResponse(serializer.serialize(history))
+    
+class MoneyTransferView(ReadOnlyModelViewSet):
+    queryset = MoneyTransfer.objects.all()
+    serializer_class = MoneyTransferExpandedSerializer
+    permission_classes = [IsAuthenticated]
+
+    @action(detail=True, methods=["get"])
+    def cancel_transfer(self, request, pk):
+        user = request.user
