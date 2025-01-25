@@ -1,3 +1,4 @@
+from apps.financial_institution.views import InstitutionView, BranchView
 from apps.person.views import SigninView, ClientView
 from rest_framework.schemas import get_schema_view
 from apps.account.views import AccountView
@@ -21,6 +22,8 @@ schema_view = get_schema_view(
 router = DefaultRouter()
 router.register(r'api/account', AccountView)
 router.register(r'api/client', ClientView, basename='client')
+router.register(r'api/institution', InstitutionView, basename='institution')
+router.register(r'api/branch', BranchView, basename='branch')
 
 urlpatterns = [
     path('', include(router.urls)),
