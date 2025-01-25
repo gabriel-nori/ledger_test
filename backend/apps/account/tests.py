@@ -64,3 +64,29 @@ class AccountTest(TestCase):
             destination=self.test_objects.fernando_account,
             ammount=transfer_ammount
         ).ammount == transfer_ammount
+
+    def test_transfer_revert(self):
+        transfer_ammount = 1000
+        self.test_objects.fernando_account.balance = 0
+        self.test_objects.fernando_account.overdraft_protection = True
+        self.test_objects.fernando_account.save()
+
+        self.test_objects.maria_account.balance = transfer_ammount
+        self.test_objects.maria_account.overdraft_protection = True
+        self.test_objects.maria_account.save()
+        services.create_transfer(self.test_objects.maria_account, self.test_objects.fernando_account, transfer_ammount)
+
+        assert self.test_objects.maria_account.balance == 0
+        assert self.test_objects.fernando_account.balance == transfer_ammount
+
+        transaction = MoneyTransfer.objects.get(
+            origin=self.test_objects.maria_account,
+            destination=self.test_objects.fernando_account,
+            ammount=transfer_ammount
+        )
+
+        services.cancel_transaction(transaction)
+        # assert self.test_objects.maria_account.balance == transfer_ammount
+        # assert self.test_objects.fernando_account.balance == 0
+        
+        

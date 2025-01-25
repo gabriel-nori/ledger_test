@@ -131,3 +131,27 @@ def create_transfer(origin: Account, destination: Account, ammount: int):
             }
         )
         raise ValueError("Insufficient funds available")
+    
+def cancel_transaction(transaction: MoneyTransfer):
+    try:
+        if transaction.status == "R":
+            logger.error(
+                "Transaction already reverted",
+                extras={
+                    "transaction_id": transaction.transaction_id,
+                    "ammount": transaction.ammount,
+                    "revert_from": transaction.destination,
+                    "revert_to": transaction.origin
+                }
+            )
+            raise AttributeError("Status is reverted already")
+        else:
+            create_transfer(transaction.destination, transaction.origin, transaction.ammount)
+    except:
+        logger.error(
+            "No transaction found with the provided ID",
+            extras={
+                "transaction_id": transaction.transaction_id
+            }
+        )
+        raise ValueError("Object not found for this ID")
