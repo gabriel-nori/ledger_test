@@ -12,6 +12,7 @@ This is a simple ledger application, allowing to create new financial accounts, 
   - Logging configuration for better monitoring.
 - **Test-Ready**: Includes testing tools and sample test cases.
 - **Docker Support**: Containerized environment for easy setup.
+- **Swagger Built-in**: no need for external tools, just use the built-in interface `http://127.0.0.1:8000/api/swagger/`
 
 ## Prerequisites
 
