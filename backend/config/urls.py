@@ -8,6 +8,7 @@ from django.contrib import admin
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
+from rest_framework.authtoken.views import obtain_auth_token
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -31,7 +32,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='ledger-swagger-ui'),
     path('api/', include('rest_framework.urls')),
-    path('api/signin/', SigninView.as_view())
+    path('api/signin/', SigninView.as_view()),
+    path('api/auth/', obtain_auth_token, name='auth'),
 ]
 
 urlpatterns += router.urls

@@ -28,3 +28,7 @@ class PersonSerializer(serializers.ModelSerializer):
         model = Person
         fields = "__all__"
         
+class LoginSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = ("username", "password")
