@@ -25,8 +25,27 @@ class AccountTest(TestCase):
         assert identifier_1 != identifier_2 != identifier_3
     
     def test_account_obj_creation(self):
-        return
-        # assert not services.build_account()
+        with self.assertRaises(ValueError) as cm:
+            services.build_account(None, None, False)
+        exception = cm.exception
+        assert str(exception) == "The provided user argument isn't a user object"
+
+        with self.assertRaises(ValueError) as cm:
+            services.build_account(self.test_objects.person_objects.fernando_ok, None, False)
+        exception = cm.exception
+        assert str(exception) == "The provided branch argument isn't a branch object"
+
+        with self.assertRaises(ValueError) as cm:
+            services.build_account(self.test_objects.person_objects.fernando_ok, self.test_objects.financial_objects.alpha_bank_01, "wrong_object")
+        exception = cm.exception
+        assert str(exception) == "The provided overdraft_protection argument isn't a bool object"
+
+        account = services.build_account(self.test_objects.person_objects.fernando_ok, self.test_objects.financial_objects.alpha_bank_01, True)
+        assert account.account_holder.name.lower() == "fernando"
+        assert account.overdraft_protection == True
+        assert account.balance == 0
+        assert account.overdraft_limit == 10000
+        assert len(account.identifier) == 6
     
     def test_take_money(self):
         self.assertRaises(ValueError, services.take_money, self.test_objects.fernando_account, 98765)

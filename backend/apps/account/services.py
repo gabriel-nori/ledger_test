@@ -13,25 +13,26 @@ def generate_account_identifier() -> str:
     """
     return (str(uuid.uuid4()).split("-")[4])[0:6]
 
-def build_account(user: Person, branch: Branch) -> Account|None:
+def build_account(user: Person, branch: Branch, overdraft_protection: bool) -> Account:
     """
     This method is the entry point to create a new bank account for the client.
     At this point, the client must have completed the registration.
     After inserting the user here, we need to generate a new account number based on bussiness logic.
-    First, we need to check, again, just to play on the safe side, if the client is under 18 or 16. This is going to change from country to country.
-    To simplify testing and development, I'm going to assume 18.
     """
-    if not personUtils.check_18_older(user.birthday):
-        return
-    
-    #build the object
 
-    account = Account(
+    if not isinstance(user, Person):
+        raise ValueError("The provided user argument isn't a user object")
+    if not isinstance(branch, Branch):
+        raise ValueError("The provided branch argument isn't a branch object")
+    if not isinstance(overdraft_protection, bool):
+        raise ValueError("The provided overdraft_protection argument isn't a bool object")
+
+    return Account(
         account_holder=user,
         institution_branch=branch,
         identifier=generate_account_identifier(),
-        overdraft_protection=True,
-        overdraft_limit=10000,
+        overdraft_protection=overdraft_protection,
+        overdraft_limit=10000, # This should be replaced by a method to calculate the allowed ammount
         balance=0
     )
     
