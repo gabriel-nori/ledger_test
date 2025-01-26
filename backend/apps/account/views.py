@@ -32,6 +32,8 @@ class AccountView(ModelViewSet):
     search_fields = ["account_holder__name", "institution_branch__name"]
     authentication_classes = [SessionAuthentication, TokenAuthentication]
     http_method_names = ["get", "post", "put", "patch"]
+    lookup_field = "identifier"
+    lookup_url_kwarg = "identifier"
 
     @action(detail=False, methods=["post"])
     @swagger_auto_schema(
@@ -145,25 +147,67 @@ class AccountView(ModelViewSet):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True, methods=["get"])
-    def list_transfers_received(self, request, pk):
-        transfers = MoneyTransfer.objects.filter(origin__id=pk)
+    def list_transfers_received(self, request, identifier):
+        transfers = MoneyTransfer.objects.filter(origin__identifier=identifier)
         serializer = MoneyTransferSerializer()
         return HttpResponse(serializer.serialize(transfers))
 
     @action(detail=True, methods=["get"])
-    def list_transfers_sent(self, request, pk):
-        transfers = MoneyTransfer.objects.filter(destination__id=pk)
+    def list_transfers_sent(self, request, identifier):
+        transfers = MoneyTransfer.objects.filter(destination__identifier=identifier)
         serializer = MoneyTransferSerializer()
         return HttpResponse(serializer.serialize(transfers))
 
     @action(detail=True, methods=["get"])
-    def list_history(self, request, pk):
+    def list_history(self, request, identifier):
         user = request.user
         history = AccountTransactionHistory.objects.filter(
-            account__id=pk, account__account_holder__user=user
+            account__identifier=identifier, account__account_holder__user=user
         )
         serializer = AccountTransactionHistorySerializer()
         return HttpResponse(serializer.serialize(history))
+
+    @action(detail=True, methods=["post"])
+    @swagger_auto_schema(
+        operation_description="Creates a new TRANSACTION",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            required=["data"],
+            properties={
+                "ammount": openapi.Schema(type=openapi.TYPE_INTEGER),
+            },
+        ),
+    )
+    def put_money(self, request, identifier):
+        """
+        According to the modeling, a user can have more than one account.
+        We need to get the specific account that the user wants to use
+        """
+        ammount = None
+        user = request.user
+        account = None
+
+        if not (request.data["ammount"]):
+            logger.error("No ammount provided", extras={"account_id": identifier})
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        ammount = request.data["ammount"]
+
+        if not user.is_superuser:
+            return Response(status=status.HTTP_403_NOT_AUTHORIZED)
+
+        try:
+            account = Account.objects.get(identifier=identifier)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            services.put_money(account, ammount)
+            return Response(status=status.HTTP_200_OK)
+        except ValueError as v:
+            logger.error(
+                "Couldn't add value to the account",
+                extras={"account_identifier": identifier, "ammount": ammount},
+            )
 
 
 class MoneyTransferView(ReadOnlyModelViewSet):
