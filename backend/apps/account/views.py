@@ -2,7 +2,8 @@ from apps.account.serializers import (
     AccountSerializer,
     AccountTransactionHistorySerializer,
     MoneyTransferSerializer,
-    MoneyTransferExpandedSerializer
+    MoneyTransferExpandedSerializer,
+    BasicAccountSerializer
 )
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from apps.account.models import Account, AccountTransactionHistory, MoneyTransfer
@@ -19,6 +20,7 @@ from apps.person.models import Person
 from django.http import HttpResponse
 from rest_framework import status
 from apps.account import services
+from apps.account import logger
 from drf_yasg import openapi
 
 class AccountView(ModelViewSet):
@@ -39,7 +41,7 @@ class AccountView(ModelViewSet):
             properties={
                 "overdraft_protection": openapi.Schema(type=openapi.TYPE_BOOLEAN),
                 "person_id": openapi.Schema(type=openapi.TYPE_INTEGER),
-                "branch_id": openapi.Schema(type=openapi.TYPE_INTEGER),
+                "branch_code": openapi.Schema(type=openapi.TYPE_STRING),
             },
         )
     )
@@ -51,13 +53,17 @@ class AccountView(ModelViewSet):
         if not (
             request.data["overdraft_protection"] and
             request.data["person_id"] and
-            request.data["branch_id"]
+            request.data["branch_code"]
         ):
+            logger.error(
+                "Bad request during account creation",
+                extras={**request}
+            )
             return Response(status=status.HTTP_400_BAD_REQUEST)
         
         overdraft_protection = request.data["overdraft_protection"]
         person_id = request.data["person_id"]
-        branch_id = request.data["branch_id"]
+        branch_code = request.data["branch_code"]
 
         try:
             person = Person.objects.get(id=person_id)
@@ -68,7 +74,7 @@ class AccountView(ModelViewSet):
             return Response(status=status.HTTP_403_NOT_AUTHORIZED)
 
         try:
-            branch = Branch.objects.get(id=branch_id)
+            branch = Branch.objects.get(code=branch_code)
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
         
@@ -76,14 +82,20 @@ class AccountView(ModelViewSet):
             return Response(status=status.HTTP_400_BAD_REQUEST)
         
         try:
-            serializer = AccountSerializer()
+            serializer = BasicAccountSerializer()
             return HttpResponse(
                 serializer.serialize(
-                    services.build_account(person, branch, overdraft_protection)
+                    [services.build_account(person, branch, overdraft_protection)]
                 )
             )
             
-        except:
+        except Exception as e:
+            logger.error(
+                "Failed to create account",
+                extras={
+                    "exception": str(e)
+                }
+            )
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=False, methods=["post"])
