@@ -7,15 +7,19 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('account', '0001_initial'),
-        ('financial_institution', '0001_initial'),
+        ("account", "0001_initial"),
+        ("financial_institution", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='account',
-            name='institution_branch',
-            field=models.ForeignKey(default=0, on_delete=django.db.models.deletion.PROTECT, to='financial_institution.branch'),
+            model_name="account",
+            name="institution_branch",
+            field=models.ForeignKey(
+                default=0,
+                on_delete=django.db.models.deletion.PROTECT,
+                to="financial_institution.branch",
+            ),
             preserve_default=False,
         ),
     ]

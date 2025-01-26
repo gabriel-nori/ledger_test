@@ -9,37 +9,85 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('location', '0001_initial'),
+        ("location", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='InstitutionType',
+            name="InstitutionType",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.TextField(max_length=50)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.TextField(max_length=50)),
             ],
         ),
         migrations.CreateModel(
-            name='Institution',
+            name="Institution",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.TextField(max_length=50)),
-                ('code', models.CharField(max_length=5)),
-                ('country', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='location.country')),
-                ('type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='financial_institution.institutiontype')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.TextField(max_length=50)),
+                ("code", models.CharField(max_length=5)),
+                (
+                    "country",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="location.country",
+                    ),
+                ),
+                (
+                    "type",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="financial_institution.institutiontype",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Branch',
+            name="Branch",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('number', models.IntegerField()),
-                ('floor', models.IntegerField(blank=True, null=True)),
-                ('room', models.IntegerField(blank=True, null=True)),
-                ('code', models.CharField(max_length=5)),
-                ('street', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='location.street')),
-                ('institution', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='financial_institution.institution')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("number", models.IntegerField()),
+                ("floor", models.IntegerField(blank=True, null=True)),
+                ("room", models.IntegerField(blank=True, null=True)),
+                ("code", models.CharField(max_length=5)),
+                (
+                    "street",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="location.street",
+                    ),
+                ),
+                (
+                    "institution",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="financial_institution.institution",
+                    ),
+                ),
             ],
         ),
     ]

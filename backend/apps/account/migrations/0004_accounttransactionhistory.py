@@ -7,18 +7,43 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('account', '0003_alter_account_balance_alter_account_overdraft_limit'),
+        ("account", "0003_alter_account_balance_alter_account_overdraft_limit"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='AccountTransactionHistory',
+            name="AccountTransactionHistory",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('operation_type', models.CharField(choices=[('I', 'Income'), ('O', 'Outcome'), ('R', 'Refund Income'), ('C', 'Refund Outcome')], max_length=1)),
-                ('ammount', models.BigIntegerField()),
-                ('timestamp', models.DateTimeField(auto_now=True)),
-                ('account', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='account.account')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "operation_type",
+                    models.CharField(
+                        choices=[
+                            ("I", "Income"),
+                            ("O", "Outcome"),
+                            ("R", "Refund Income"),
+                            ("C", "Refund Outcome"),
+                        ],
+                        max_length=1,
+                    ),
+                ),
+                ("ammount", models.BigIntegerField()),
+                ("timestamp", models.DateTimeField(auto_now=True)),
+                (
+                    "account",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="account.account",
+                    ),
+                ),
             ],
         ),
     ]

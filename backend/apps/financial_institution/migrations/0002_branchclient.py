@@ -7,18 +7,37 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('financial_institution', '0001_initial'),
-        ('person', '0002_remove_personaddress_street_type_and_more'),
+        ("financial_institution", "0001_initial"),
+        ("person", "0002_remove_personaddress_street_type_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='BranchClient',
+            name="BranchClient",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('client_since', models.DateTimeField(auto_now_add=True)),
-                ('Branch', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='financial_institution.branch')),
-                ('client', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='person.person')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("client_since", models.DateTimeField(auto_now_add=True)),
+                (
+                    "Branch",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="financial_institution.branch",
+                    ),
+                ),
+                (
+                    "client",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT, to="person.person"
+                    ),
+                ),
             ],
         ),
     ]

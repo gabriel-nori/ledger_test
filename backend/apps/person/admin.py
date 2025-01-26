@@ -1,9 +1,4 @@
-from apps.person.models import (
-    Occupation,
-    Person,
-    AddressType,
-    PersonAddress
-)
+from apps.person.models import Occupation, Person, AddressType, PersonAddress
 from django.contrib import admin
 
 admin.site.register(Occupation)

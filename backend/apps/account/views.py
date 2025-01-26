@@ -3,7 +3,7 @@ from apps.account.serializers import (
     AccountTransactionHistorySerializer,
     MoneyTransferSerializer,
     MoneyTransferExpandedSerializer,
-    BasicAccountSerializer
+    BasicAccountSerializer,
 )
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from apps.account.models import Account, AccountTransactionHistory, MoneyTransfer
@@ -23,15 +23,16 @@ from apps.account import services
 from apps.account import logger
 from drf_yasg import openapi
 
+
 class AccountView(ModelViewSet):
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
     filter_backends = [SearchFilter]
     permission_classes = [IsAuthenticated, IsOwnerOrSuperuser]
-    search_fields = ['account_holder__name', 'institution_branch__name']
+    search_fields = ["account_holder__name", "institution_branch__name"]
     authentication_classes = [SessionAuthentication, TokenAuthentication]
-    http_method_names = ['get', 'post', 'put', 'patch']
-    
+    http_method_names = ["get", "post", "put", "patch"]
+
     @action(detail=False, methods=["post"])
     @swagger_auto_schema(
         operation_description="Creates a new account for specified user and person",
@@ -43,7 +44,7 @@ class AccountView(ModelViewSet):
                 "person_id": openapi.Schema(type=openapi.TYPE_INTEGER),
                 "branch_code": openapi.Schema(type=openapi.TYPE_STRING),
             },
-        )
+        ),
     )
     def create_new(self, request):
         user = request.user
@@ -51,16 +52,13 @@ class AccountView(ModelViewSet):
         branch = None
 
         if not (
-            request.data["overdraft_protection"] and
-            request.data["person_id"] and
-            request.data["branch_code"]
+            request.data["overdraft_protection"]
+            and request.data["person_id"]
+            and request.data["branch_code"]
         ):
-            logger.error(
-                "Bad request during account creation",
-                extras={**request}
-            )
+            logger.error("Bad request during account creation", extras={**request})
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        
+
         overdraft_protection = request.data["overdraft_protection"]
         person_id = request.data["person_id"]
         branch_code = request.data["branch_code"]
@@ -69,7 +67,7 @@ class AccountView(ModelViewSet):
             person = Person.objects.get(id=person_id)
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        
+
         if person.user != user:
             return Response(status=status.HTTP_403_NOT_AUTHORIZED)
 
@@ -77,10 +75,10 @@ class AccountView(ModelViewSet):
             branch = Branch.objects.get(code=branch_code)
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        
+
         if not isinstance(overdraft_protection, bool):
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        
+
         try:
             serializer = BasicAccountSerializer()
             return HttpResponse(
@@ -88,14 +86,9 @@ class AccountView(ModelViewSet):
                     [services.build_account(person, branch, overdraft_protection)]
                 )
             )
-            
+
         except Exception as e:
-            logger.error(
-                "Failed to create account",
-                extras={
-                    "exception": str(e)
-                }
-            )
+            logger.error("Failed to create account", extras={"exception": str(e)})
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=False, methods=["post"])
@@ -109,7 +102,7 @@ class AccountView(ModelViewSet):
                 "target_account": openapi.Schema(type=openapi.TYPE_INTEGER),
                 "ammount": openapi.Schema(type=openapi.TYPE_INTEGER),
             },
-        )
+        ),
     )
     def create_transaction(self, request):
         """
@@ -120,41 +113,37 @@ class AccountView(ModelViewSet):
         source_account = None
         user = request.user
 
-        if not set(
-            (
-                "source_account",
-                "target_account",
-                "ammount"
-            )
-        ).issubset(request.data.keys()):
+        if not set(("source_account", "target_account", "ammount")).issubset(
+            request.data.keys()
+        ):
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        
+
         source_account_id = request.data["source_account"]
         target_account_id = request.data["target_account"]
         ammount = request.data["ammount"]
 
         if ammount <= 0:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-    
+
         try:
             target_account = Account.objects.get(identifier=target_account_id)
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        
+
         try:
             source_account = Account.objects.get(identifier=source_account_id)
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        
+
         if source_account.account_holder.user != user:
             return Response(status=status.HTTP_403_NOT_AUTHORIZED)
-        
+
         try:
             services.create_transfer(source_account, target_account, ammount)
             return Response(status=status.HTTP_200_OK)
         except ValueError:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        
+
     @action(detail=True, methods=["get"])
     def list_transfers_received(self, request, pk):
         transfers = MoneyTransfer.objects.filter(origin__id=pk)
@@ -166,14 +155,17 @@ class AccountView(ModelViewSet):
         transfers = MoneyTransfer.objects.filter(destination__id=pk)
         serializer = MoneyTransferSerializer()
         return HttpResponse(serializer.serialize(transfers))
-    
+
     @action(detail=True, methods=["get"])
     def list_history(self, request, pk):
         user = request.user
-        history = AccountTransactionHistory.objects.filter(account__id=pk, account__account_holder__user=user)
+        history = AccountTransactionHistory.objects.filter(
+            account__id=pk, account__account_holder__user=user
+        )
         serializer = AccountTransactionHistorySerializer()
         return HttpResponse(serializer.serialize(history))
-    
+
+
 class MoneyTransferView(ReadOnlyModelViewSet):
     queryset = MoneyTransfer.objects.all()
     serializer_class = MoneyTransferExpandedSerializer
@@ -188,10 +180,10 @@ class MoneyTransferView(ReadOnlyModelViewSet):
             transfer = MoneyTransfer.objects.get(transaction_id=pk)
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        
+
         if not transfer.origin.account_holder.user == user:
             return Response(status=status.HTTP_403_NOT_AUTHORIZED)
-        
+
         try:
             services.cancel_transaction(transfer)
             return Response(status=status.HTTP_200_OK)

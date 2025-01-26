@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('account', '0005_alter_account_identifier_moneytransfer'),
+        ("account", "0005_alter_account_identifier_moneytransfer"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='moneytransfer',
-            name='status',
-            field=models.CharField(choices=[('C', 'Completed'), ('R', 'Reverted')], default='C', max_length=1),
+            model_name="moneytransfer",
+            name="status",
+            field=models.CharField(
+                choices=[("C", "Completed"), ("R", "Reverted")],
+                default="C",
+                max_length=1,
+            ),
         ),
     ]

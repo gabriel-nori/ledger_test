@@ -7,17 +7,19 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('account', '0006_moneytransfer_status'),
+        ("account", "0006_moneytransfer_status"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='moneytransfer',
-            name='id',
+            model_name="moneytransfer",
+            name="id",
         ),
         migrations.AlterField(
-            model_name='moneytransfer',
-            name='transaction_id',
-            field=models.UUIDField(default=uuid.uuid4, primary_key=True, serialize=False),
+            model_name="moneytransfer",
+            name="transaction_id",
+            field=models.UUIDField(
+                default=uuid.uuid4, primary_key=True, serialize=False
+            ),
         ),
     ]

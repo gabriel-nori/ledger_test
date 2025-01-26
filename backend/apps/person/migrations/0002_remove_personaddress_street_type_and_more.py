@@ -7,27 +7,33 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('location', '0001_initial'),
-        ('person', '0001_initial'),
+        ("location", "0001_initial"),
+        ("person", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='personaddress',
-            name='street_type',
+            model_name="personaddress",
+            name="street_type",
         ),
         migrations.AddField(
-            model_name='personaddress',
-            name='person',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.PROTECT, to='person.person'),
+            model_name="personaddress",
+            name="person",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.PROTECT,
+                to="person.person",
+            ),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='personaddress',
-            name='street',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='location.street'),
+            model_name="personaddress",
+            name="street",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT, to="location.street"
+            ),
         ),
         migrations.DeleteModel(
-            name='StreetType',
+            name="StreetType",
         ),
     ]

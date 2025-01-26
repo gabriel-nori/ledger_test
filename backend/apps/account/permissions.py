@@ -1,5 +1,6 @@
 from rest_framework.permissions import BasePermission
 
+
 class IsOwnerOrSuperuser(BasePermission):
     """
     Custom permission to allow users to access only their own data

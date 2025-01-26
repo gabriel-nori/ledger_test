@@ -1,10 +1,12 @@
 from django.db import models
 
+
 class Continent(models.Model):
     name = models.TextField(max_length=50)
 
     def __str__(self):
         return self.name
+
 
 class Country(models.Model):
     continent = models.ForeignKey(Continent, on_delete=models.PROTECT)
@@ -13,7 +15,8 @@ class Country(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+
 class State(models.Model):
     TYPES = [("S", "State"), ("P", "Province")]
     country = models.ForeignKey(Country, on_delete=models.PROTECT)
@@ -22,7 +25,8 @@ class State(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+
 class County(models.Model):
     TYPES = [("C", "County"), ("D", "District")]
     state = models.ForeignKey(State, on_delete=models.PROTECT)
@@ -31,7 +35,8 @@ class County(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+
 class City(models.Model):
     TYPES = [("C", "City"), ("T", "Town")]
     county = models.ForeignKey(County, on_delete=models.PROTECT)
@@ -40,7 +45,8 @@ class City(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+
 class Neighborhood(models.Model):
     TYPES = [("N", "Neighborhood"), ("C", "Community")]
     country = models.ForeignKey(City, on_delete=models.PROTECT)
@@ -50,12 +56,14 @@ class Neighborhood(models.Model):
     def __str__(self):
         return self.name
 
+
 class StreetType(models.Model):
     name = models.TextField(max_length=50)
 
     def __str__(self):
         return self.name
-    
+
+
 class Street(models.Model):
     neighborhood = models.ForeignKey(Neighborhood, on_delete=models.PROTECT)
     name = models.TextField(max_length=50)

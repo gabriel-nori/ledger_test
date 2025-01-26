@@ -7,33 +7,43 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('location', '0001_initial'),
+        ("location", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='city',
-            name='country',
+            model_name="city",
+            name="country",
         ),
         migrations.RemoveField(
-            model_name='street',
-            name='country',
+            model_name="street",
+            name="country",
         ),
         migrations.AddField(
-            model_name='city',
-            name='county',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.PROTECT, to='location.county'),
+            model_name="city",
+            name="county",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.PROTECT,
+                to="location.county",
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='street',
-            name='neighborhood',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.PROTECT, to='location.neighborhood'),
+            model_name="street",
+            name="neighborhood",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.PROTECT,
+                to="location.neighborhood",
+            ),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='street',
-            name='type',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='location.streettype'),
+            model_name="street",
+            name="type",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT, to="location.streettype"
+            ),
         ),
     ]

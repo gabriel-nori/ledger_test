@@ -13,7 +13,7 @@ from rest_framework.authtoken.views import obtain_auth_token
 schema_view = get_schema_view(
     openapi.Info(
         title="Ledger API",
-        default_version='v1',
+        default_version="v1",
         description="Ledger API description",
     ),
     public=True,
@@ -21,19 +21,23 @@ schema_view = get_schema_view(
 )
 
 router = DefaultRouter()
-router.register(r'api/account', AccountView)
-router.register(r'api/client', ClientView, basename='client')
-router.register(r'api/institution', InstitutionView, basename='institution')
-router.register(r'api/branch', BranchView, basename='branch')
-router.register(r'api/money_transfer', MoneyTransferView, basename='money_transfer')
+router.register(r"api/account", AccountView)
+router.register(r"api/client", ClientView, basename="client")
+router.register(r"api/institution", InstitutionView, basename="institution")
+router.register(r"api/branch", BranchView, basename="branch")
+router.register(r"api/money_transfer", MoneyTransferView, basename="money_transfer")
 
 urlpatterns = [
-    path('', include(router.urls)),
-    path('admin/', admin.site.urls),
-    path('api/swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='ledger-swagger-ui'),
-    path('api/', include('rest_framework.urls')),
-    path('api/signin/', SigninView.as_view()),
-    path('api/auth/', obtain_auth_token, name='auth'),
+    path("", include(router.urls)),
+    path("admin/", admin.site.urls),
+    path(
+        "api/swagger/",
+        schema_view.with_ui("swagger", cache_timeout=0),
+        name="ledger-swagger-ui",
+    ),
+    path("api/", include("rest_framework.urls")),
+    path("api/signin/", SigninView.as_view()),
+    path("api/auth/", obtain_auth_token, name="auth"),
 ]
 
 urlpatterns += router.urls

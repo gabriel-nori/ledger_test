@@ -8,77 +8,207 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Continent',
+            name="Continent",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.TextField(max_length=50)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.TextField(max_length=50)),
             ],
         ),
         migrations.CreateModel(
-            name='StreetType',
+            name="StreetType",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.TextField(max_length=50)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.TextField(max_length=50)),
             ],
         ),
         migrations.CreateModel(
-            name='Country',
+            name="Country",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.TextField(max_length=50)),
-                ('code', models.CharField(max_length=2, unique=True)),
-                ('continent', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='location.continent')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.TextField(max_length=50)),
+                ("code", models.CharField(max_length=2, unique=True)),
+                (
+                    "continent",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="location.continent",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='City',
+            name="City",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.TextField(max_length=50)),
-                ('type', models.CharField(choices=[('C', 'City'), ('T', 'Town')], default='C', max_length=1)),
-                ('country', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='location.country')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.TextField(max_length=50)),
+                (
+                    "type",
+                    models.CharField(
+                        choices=[("C", "City"), ("T", "Town")],
+                        default="C",
+                        max_length=1,
+                    ),
+                ),
+                (
+                    "country",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="location.country",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Neighborhood',
+            name="Neighborhood",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.TextField(max_length=50)),
-                ('type', models.CharField(choices=[('N', 'Neighborhood'), ('C', 'Community')], default='N', max_length=1)),
-                ('country', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='location.city')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.TextField(max_length=50)),
+                (
+                    "type",
+                    models.CharField(
+                        choices=[("N", "Neighborhood"), ("C", "Community")],
+                        default="N",
+                        max_length=1,
+                    ),
+                ),
+                (
+                    "country",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT, to="location.city"
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='State',
+            name="State",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.TextField(max_length=50)),
-                ('type', models.CharField(choices=[('S', 'State'), ('P', 'Province')], default='S', max_length=1)),
-                ('country', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='location.country')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.TextField(max_length=50)),
+                (
+                    "type",
+                    models.CharField(
+                        choices=[("S", "State"), ("P", "Province")],
+                        default="S",
+                        max_length=1,
+                    ),
+                ),
+                (
+                    "country",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="location.country",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='County',
+            name="County",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.TextField(max_length=50)),
-                ('type', models.CharField(choices=[('C', 'County'), ('D', 'District')], default='C', max_length=1)),
-                ('state', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='location.state')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.TextField(max_length=50)),
+                (
+                    "type",
+                    models.CharField(
+                        choices=[("C", "County"), ("D", "District")],
+                        default="C",
+                        max_length=1,
+                    ),
+                ),
+                (
+                    "state",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT, to="location.state"
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Street',
+            name="Street",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.TextField(max_length=50)),
-                ('postal_code', models.TextField()),
-                ('country', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='location.city')),
-                ('type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='location.neighborhood')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.TextField(max_length=50)),
+                ("postal_code", models.TextField()),
+                (
+                    "country",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT, to="location.city"
+                    ),
+                ),
+                (
+                    "type",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="location.neighborhood",
+                    ),
+                ),
             ],
         ),
     ]

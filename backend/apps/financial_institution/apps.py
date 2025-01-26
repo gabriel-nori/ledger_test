@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class FinancialInstitutionConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'apps.financial_institution'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "apps.financial_institution"

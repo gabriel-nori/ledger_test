@@ -1,8 +1,8 @@
-from apps.financial_institution.models import(
+from apps.financial_institution.models import (
     InstitutionType,
     Institution,
     Branch,
-    BranchClient
+    BranchClient,
 )
 from django.contrib import admin
 

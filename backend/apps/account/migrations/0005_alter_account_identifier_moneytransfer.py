@@ -8,24 +8,46 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('account', '0004_accounttransactionhistory'),
+        ("account", "0004_accounttransactionhistory"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='account',
-            name='identifier',
+            model_name="account",
+            name="identifier",
             field=models.CharField(max_length=6, unique=True),
         ),
         migrations.CreateModel(
-            name='MoneyTransfer',
+            name="MoneyTransfer",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('ammount', models.BigIntegerField()),
-                ('transaction_id', models.UUIDField(default=uuid.uuid4)),
-                ('timestamp', models.DateTimeField(auto_now=True)),
-                ('destination', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='transfer_destination', to='account.account')),
-                ('origin', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='transfer_origin', to='account.account')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("ammount", models.BigIntegerField()),
+                ("transaction_id", models.UUIDField(default=uuid.uuid4)),
+                ("timestamp", models.DateTimeField(auto_now=True)),
+                (
+                    "destination",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="transfer_destination",
+                        to="account.account",
+                    ),
+                ),
+                (
+                    "origin",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="transfer_origin",
+                        to="account.account",
+                    ),
+                ),
             ],
         ),
     ]

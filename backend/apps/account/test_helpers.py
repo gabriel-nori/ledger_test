@@ -3,7 +3,8 @@ from apps.person.test_helpers import TestObjects as PersonObjects
 from apps.account.services import generate_account_identifier
 from apps.account.models import Account
 
-class TestObjects():
+
+class TestObjects:
     kyle_account = None
     fernando_account = None
     maria_account = None
@@ -20,7 +21,7 @@ class TestObjects():
             identifier=generate_account_identifier(),
             overdraft_protection=True,
             overdraft_limit=250000,
-            balance=0
+            balance=0,
         )[0]
 
         self.fernando_account = Account.objects.get_or_create(
@@ -29,7 +30,7 @@ class TestObjects():
             identifier=generate_account_identifier(),
             overdraft_protection=True,
             overdraft_limit=250000,
-            balance=0
+            balance=0,
         )[0]
 
         self.maria_account = Account.objects.get_or_create(
@@ -38,5 +39,5 @@ class TestObjects():
             identifier=generate_account_identifier(),
             overdraft_protection=False,
             overdraft_limit=250000,
-            balance=0
+            balance=0,
         )[0]

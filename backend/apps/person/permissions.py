@@ -1,6 +1,7 @@
 from rest_framework.permissions import BasePermission
 from apps.person.models import Person
 
+
 class IsOwnerOrSuperuser(BasePermission):
     """
     Custom permission to allow users to access only their own data
@@ -14,7 +15,7 @@ class IsOwnerOrSuperuser(BasePermission):
 
         # Regular users can only access their own data
         return obj.user == request.user
-    
+
     def has_permission(self, request, view):
         blocked = Person.objects.filter(user=request.user)
         return not blocked

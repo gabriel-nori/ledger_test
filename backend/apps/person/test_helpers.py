@@ -2,7 +2,8 @@ from apps.person.models import Person, Occupation
 from django.contrib.auth import get_user_model
 from datetime import date
 
-class TestObjects():
+
+class TestObjects:
     child_occupation = None
     occupation = None
     underage_client = None
@@ -21,7 +22,7 @@ class TestObjects():
             primary_email="teste@teste.com",
             occupation=self.child_occupation,
             document="ajbsjbajsbas",
-            user=get_user_model().objects.get_or_create(username="test_user_1")[0]
+            user=get_user_model().objects.get_or_create(username="test_user_1")[0],
         )[0]
 
         self.michael_ok = Person.objects.get_or_create(
@@ -32,7 +33,7 @@ class TestObjects():
             primary_email="teste@teste.com",
             occupation=self.occupation,
             document="ajbsjbajsbas",
-            user=get_user_model().objects.get_or_create(username="test_user_2")[0]
+            user=get_user_model().objects.get_or_create(username="test_user_2")[0],
         )[0]
 
         self.fernando_ok = Person.objects.get_or_create(
@@ -43,7 +44,7 @@ class TestObjects():
             primary_email="teste@teste.com",
             occupation=self.occupation,
             document="ajbsjbajsbas",
-            user=get_user_model().objects.get_or_create(username="test_user_3")[0]
+            user=get_user_model().objects.get_or_create(username="test_user_3")[0],
         )[0]
 
         self.maria_ok = Person.objects.get_or_create(
@@ -54,5 +55,5 @@ class TestObjects():
             primary_email="teste@teste.com",
             occupation=self.occupation,
             document="ajbsjbajsbas",
-            user=get_user_model().objects.get_or_create(username="test_user_4")[0]
+            user=get_user_model().objects.get_or_create(username="test_user_4")[0],
         )[0]

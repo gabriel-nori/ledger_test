@@ -1,10 +1,11 @@
 from apps.location.test_helpers import TestObjects as LocationObjects
 from apps.financial_institution.models import *
 
-class TestObjects():
+
+class TestObjects:
 
     def create(self):
-        self. location_objects = LocationObjects()
+        self.location_objects = LocationObjects()
         self.location_objects.create()
 
         self.institution_type = InstitutionType.objects.get_or_create(name="bank")[0]
@@ -13,21 +14,21 @@ class TestObjects():
             name="Alpha Bank",
             type=self.institution_type,
             code="12409",
-            country=self.location_objects.brazil
+            country=self.location_objects.brazil,
         )[0]
 
         self.not_a_bank = Institution.objects.get_or_create(
             name="Not a Bank",
             type=self.institution_type,
             code="09832",
-            country=self.location_objects.brazil
+            country=self.location_objects.brazil,
         )[0]
 
         self.good_savings_bank = Institution.objects.get_or_create(
             name="Good Savings Bank",
             type=self.institution_type,
             code="95430",
-            country=self.location_objects.argentina
+            country=self.location_objects.argentina,
         )[0]
 
         self.alpha_bank_01 = Branch.objects.get_or_create(
@@ -36,7 +37,7 @@ class TestObjects():
             number=123,
             floor=None,
             room=None,
-            code="saar4"
+            code="saar4",
         )[0]
 
         self.not_a_bank_01 = Branch.objects.get_or_create(
@@ -45,7 +46,7 @@ class TestObjects():
             number=201,
             floor=None,
             room=None,
-            code="ssfg"
+            code="ssfg",
         )[0]
 
         self.good_savings_bank_01 = Branch.objects.get_or_create(
@@ -54,5 +55,5 @@ class TestObjects():
             number=91,
             floor=None,
             room=None,
-            code="xxfa"
+            code="xxfa",
         )[0]

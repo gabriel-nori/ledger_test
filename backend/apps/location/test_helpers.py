@@ -1,4 +1,4 @@
-from apps.location.models import(
+from apps.location.models import (
     Continent,
     Country,
     State,
@@ -6,10 +6,11 @@ from apps.location.models import(
     City,
     Neighborhood,
     StreetType,
-    Street
+    Street,
 )
 
-class TestObjects():
+
+class TestObjects:
     continent = None
     brazil = None
     argentina = None
@@ -32,81 +33,55 @@ class TestObjects():
         self.continent = Continent.objects.get_or_create(name="America")[0]
 
         self.brazil = Country.objects.get_or_create(
-            continent=self.continent,
-            name="Brazil",
-            code="BR"
+            continent=self.continent, name="Brazil", code="BR"
         )[0]
 
         self.argentina = Country.objects.get_or_create(
-            continent=self.continent,
-            name="Argentina",
-            code="AR"
+            continent=self.continent, name="Argentina", code="AR"
         )[0]
 
         self.united_states = Country.objects.get_or_create(
-            continent=self.continent,
-            name="United States",
-            code="US"
+            continent=self.continent, name="United States", code="US"
         )[0]
 
         self.germany = Country.objects.get_or_create(
-            continent=self.continent,
-            name="Germany",
-            code="DE"
+            continent=self.continent, name="Germany", code="DE"
         )[0]
 
         self.portugal = Country.objects.get_or_create(
-            continent=self.continent,
-            name="Portugal",
-            code="PT"
+            continent=self.continent, name="Portugal", code="PT"
         )[0]
 
         self.sao_paulo_state = State.objects.get_or_create(
-            country=self.brazil,
-            name="São Paulo",
-            type="S"
+            country=self.brazil, name="São Paulo", type="S"
         )[0]
 
         self.buenos_aires_province = State.objects.get_or_create(
-            country=self.argentina,
-            name="Buenos Aires",
-            type="P"
+            country=self.argentina, name="Buenos Aires", type="P"
         )[0]
 
         self.buenos_aires_county = County.objects.get_or_create(
-            state=self.buenos_aires_province,
-            name="Buenos Aires",
-            type="C"
+            state=self.buenos_aires_province, name="Buenos Aires", type="C"
         )[0]
 
         self.sao_paulo_district = County.objects.get_or_create(
-            state=self.sao_paulo_state,
-            name="São Paulo",
-            type="D"
+            state=self.sao_paulo_state, name="São Paulo", type="D"
         )[0]
 
         self.sao_paulo_city = City.objects.get_or_create(
-            county=self.sao_paulo_district,
-            name="São Paulo",
-            type="C"
+            county=self.sao_paulo_district, name="São Paulo", type="C"
         )[0]
 
         self.san_isidro_city = City.objects.get_or_create(
-            county=self.buenos_aires_county,
-            name="San Isidro",
-            type="C"
+            county=self.buenos_aires_county, name="San Isidro", type="C"
         )[0]
 
         self.lapa = Neighborhood.objects.get_or_create(
-            country=self.sao_paulo_city,
-            name="São Paulo",
-            type="N"
+            country=self.sao_paulo_city, name="São Paulo", type="N"
         )[0]
 
         self.acasusso_neighborhood = Neighborhood.objects.get_or_create(
-            country=self.san_isidro_city,
-            name="Acassuso",
-            type="N"
+            country=self.san_isidro_city, name="Acassuso", type="N"
         )[0]
 
         self.street = StreetType.objects.get_or_create(name="Street")[0]
@@ -115,12 +90,12 @@ class TestObjects():
             neighborhood=self.acasusso_neighborhood,
             name="Acassuso",
             type=self.street,
-            postal_code="1641"
+            postal_code="1641",
         )[0]
 
         self.croata = Street.objects.get_or_create(
-        neighborhood=self.lapa,
-        name="Croata",
-        type=self.street,
-        postal_code="05056-020"
-    )[0]
+            neighborhood=self.lapa,
+            name="Croata",
+            type=self.street,
+            postal_code="05056-020",
+        )[0]

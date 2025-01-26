@@ -6,7 +6,7 @@ from apps.location.models import (
     City,
     Neighborhood,
     StreetType,
-    Street
+    Street,
 )
 from django.contrib import admin
 

@@ -18,26 +18,30 @@ from rest_framework import status
 class SigninView(CreateAPIView):
     queryset = Person.objects.all()
     model = get_user_model()
-    permission_classes = [
-        permissions.AllowAny # Or anon users can't register
-    ]
+    permission_classes = [permissions.AllowAny]  # Or anon users can't register
     serializer_class = SiginSerializer
+
 
 class LoginAPIView(APIView):
     serializer_class = LoginSerializer
     authentication_classes = [TokenAuthentication]
-    permission_classes = [
-        permissions.AllowAny # Or anon users can't register
-    ]
+    permission_classes = [permissions.AllowAny]  # Or anon users can't register
 
     def post(self, request):
-        serializer = LoginSerializer(data = request.data)
+        serializer = LoginSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            user = authenticate(username=serializer.data['username'], password=serializer.data['password'])
+            user = authenticate(
+                username=serializer.data["username"],
+                password=serializer.data["password"],
+            )
             if user:
                 token, created = Token.objects.get_or_create(user=user)
-                return Response({'token': [token.key], "Sucsses":"Login SucssesFully"}, status=status.HTTP_201_CREATED )
-            return Response({'Massage': 'Invalid Username and Password'}, status=401)
+                return Response(
+                    {"token": [token.key], "Sucsses": "Login SucssesFully"},
+                    status=status.HTTP_201_CREATED,
+                )
+            return Response({"Massage": "Invalid Username and Password"}, status=401)
+
 
 class ClientView(ModelViewSet):
     queryset = Person.objects.all()

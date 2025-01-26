@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('account', '0002_account_institution_branch'),
+        ("account", "0002_account_institution_branch"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='account',
-            name='balance',
+            model_name="account",
+            name="balance",
             field=models.BigIntegerField(),
         ),
         migrations.AlterField(
-            model_name='account',
-            name='overdraft_limit',
+            model_name="account",
+            name="overdraft_limit",
             field=models.BigIntegerField(),
         ),
     ]
