@@ -19,5 +19,12 @@ RUN manage.py collectstatic
 # Expose the default Django port
 EXPOSE 8000
 
-# Set the default command to run the Django app
-CMD ["gunicorn", "backend.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]
+# To enable the application to auto start, we need this command to be set on the docker file
+# I'm removing it from here and this is going to be passed in two distinct steps.
+# The first one is to migrate the database and the second one to start the app.
+
+# Here's the command to start the aplication:
+# CMD ["gunicorn", "backend.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]
+
+# Here's the command to migrate the database:
+# CMD ["python", "manage. py", "migrate"]
