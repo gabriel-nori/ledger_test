@@ -4,6 +4,7 @@ from apps.account.serializers import (
     MoneyTransferSerializer,
     MoneyTransferExpandedSerializer
 )
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from apps.account.models import Account, AccountTransactionHistory, MoneyTransfer
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from apps.account.permissions import IsOwnerOrSuperuser
@@ -23,6 +24,8 @@ class AccountView(ModelViewSet):
     filter_backends = [SearchFilter]
     permission_classes = [IsAuthenticated, IsOwnerOrSuperuser]
     search_fields = ['account_holder__name', 'institution_branch__name']
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+    
 
     @action(detail=False, methods=["post"])
     def create_transaction(self, request):
@@ -92,6 +95,7 @@ class MoneyTransferView(ReadOnlyModelViewSet):
     queryset = MoneyTransfer.objects.all()
     serializer_class = MoneyTransferExpandedSerializer
     permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
 
     @action(detail=True, methods=["delete"])
     def cancel_transfer(self, request, pk):
