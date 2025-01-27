@@ -1,11 +1,13 @@
 # Use an official Python base image
 FROM python:3.10-alpine
 
+RUN mkdir /backend
+
 # Set the working directory in the container
 WORKDIR /backend
 
 # Copy the application code to the container
-COPY ./backend /backend
+COPY ./backend/ ./
 
 # Install necessary system dependencies
 RUN apk add --no-cache build-base libpq libpq-dev
@@ -14,7 +16,7 @@ RUN apk add --no-cache build-base libpq libpq-dev
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Creates the static files to run admin and other internal applications
-RUN manage.py collectstatic
+RUN python3 manage.py collectstatic --noinput
 
 # Expose the default Django port
 EXPOSE 8000
