@@ -26,7 +26,7 @@ EXPOSE 8000
 # The first one is to migrate the database and the second one to start the app.
 
 # Here's the command to start the aplication:
-# CMD ["gunicorn", "backend.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]
+CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]
 
 # Here's the command to migrate the database:
 # CMD ["python", "manage. py", "migrate"]
