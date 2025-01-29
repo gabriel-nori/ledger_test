@@ -63,23 +63,29 @@ class AccountTest(TestCase):
 
     def test_take_money(self):
         self.assertRaises(
-            ValueError, services.take_money, self.test_objects.fernando_account, 98765
+            ValueError, services.take_money, self.test_objects.fernando_account.id, 98765
         )
         self.test_objects.fernando_account.balance = 98765
-        assert services.take_money(self.test_objects.fernando_account, 98765)
+        self.test_objects.fernando_account.save()
+        assert services.take_money(self.test_objects.fernando_account.id, 98765)
         self.test_objects.fernando_account.balance = 12345
         self.test_objects.fernando_account.overdraft_protection = False
-        assert services.take_money(self.test_objects.fernando_account, 12348)
+        self.test_objects.fernando_account.save()
+        assert services.take_money(self.test_objects.fernando_account.id, 12348)
+        self.test_objects.fernando_account.refresh_from_db()
         assert self.test_objects.fernando_account.balance == -3
 
     def test_put_money(self):
         self.test_objects.fernando_account.balance = 0
-        assert services.put_money(self.test_objects.fernando_account, 12345)
+        self.test_objects.fernando_account.save()
+        services.put_money(self.test_objects.fernando_account.id, 12345)
+        self.test_objects.fernando_account.refresh_from_db()
         assert self.test_objects.fernando_account.balance == 12345
 
         self.test_objects.fernando_account.balance = 0
+        self.test_objects.fernando_account.save()
         self.assertRaises(
-            ValueError, services.put_money, self.test_objects.fernando_account, -12345
+            ValueError, services.put_money, self.test_objects.fernando_account.id, -12345
         )
         # assert self.test_objects.fernando_account.balance == 12345
 
@@ -92,18 +98,22 @@ class AccountTest(TestCase):
         self.test_objects.maria_account.balance = transfer_ammount
         self.test_objects.maria_account.overdraft_protection = True
         self.test_objects.maria_account.save()
+
         self.assertRaises(
             ValueError,
             services.create_transfer,
-            self.test_objects.fernando_account,
-            self.test_objects.maria_account,
+            self.test_objects.fernando_account.id,
+            self.test_objects.maria_account.id,
             transfer_ammount,
         )
         services.create_transfer(
-            self.test_objects.maria_account,
-            self.test_objects.fernando_account,
+            self.test_objects.maria_account.id,
+            self.test_objects.fernando_account.id,
             transfer_ammount,
         )
+        self.test_objects.maria_account.refresh_from_db()
+        self.test_objects.fernando_account.refresh_from_db()
+
         assert self.test_objects.maria_account.balance == 0
         assert self.test_objects.fernando_account.balance == transfer_ammount
         assert (
@@ -125,11 +135,13 @@ class AccountTest(TestCase):
         self.test_objects.maria_account.overdraft_protection = True
         self.test_objects.maria_account.save()
         services.create_transfer(
-            self.test_objects.maria_account,
-            self.test_objects.fernando_account,
+            self.test_objects.maria_account.id,
+            self.test_objects.fernando_account.id,
             transfer_ammount,
         )
 
+        self.test_objects.maria_account.refresh_from_db()
+        self.test_objects.fernando_account.refresh_from_db()
         assert self.test_objects.maria_account.balance == 0
         assert self.test_objects.fernando_account.balance == transfer_ammount
 

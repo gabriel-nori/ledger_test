@@ -1,5 +1,6 @@
 from apps.account.models import Account, AccountTransactionHistory, MoneyTransfer
 from apps.financial_institution.models import Branch
+from django.db import transaction
 from apps.person import utils as personUtils
 from apps.person.models import Person
 from apps.account import logger
@@ -41,11 +42,13 @@ def build_account(user: Person, branch: Branch, overdraft_protection: bool) -> A
     )
 
 
-def take_money(account: Account, ammount: int, refund: bool = False) -> bool:
+
+def take_money(account_id: Account, ammount: int, refund: bool = False) -> bool:
     """
     This method receives the account object and the ammount to be taken in cents.
     if the ammount is less than what is available, it checks if overdraft is possible.
     """
+    account = Account.objects.get(id=account_id)
     balance_before = account.balance
     if ammount <= 0:
         raise ValueError("The ammount provided is less than 0")
@@ -59,51 +62,61 @@ def take_money(account: Account, ammount: int, refund: bool = False) -> bool:
         else:
             raise ValueError("Value is above client overdraft limit")
     if account.balance == balance_before - ammount:
-        account.save()
-        if not refund:
-            AccountTransactionHistory.objects.create(
-                account=account, operation_type="I", ammount=ammount
-            )
-        else:
-            AccountTransactionHistory.objects.create(
-                account=account, operation_type="C", ammount=ammount
-            )
-        return True
+        with transaction.atomic():
+            account.save()
+            if not refund:
+                AccountTransactionHistory.objects.create(
+                    account=account, operation_type="I", ammount=ammount
+                )
+            else:
+                AccountTransactionHistory.objects.create(
+                    account=account, operation_type="C", ammount=ammount
+                )
+            return True
 
 
-def put_money(account: Account, ammount: int, refund: bool = False) -> bool:
+
+def put_money(account_id: Account, ammount: int, refund: bool = False) -> bool:
+    account = Account.objects.get(id=account_id)
     if ammount <= 0:
         raise ValueError("The ammount provided is less than 0")
     balance_before = account.balance
     account.balance += ammount
     if account.balance == balance_before + ammount:
-        account.save()
-        if not refund:
-            AccountTransactionHistory.objects.create(
-                account=account, operation_type="I", ammount=ammount
-            )
-        else:
-            AccountTransactionHistory.objects.create(
-                account=account, operation_type="C", ammount=ammount
-            )
-        return True
+        with transaction.atomic():
+            account.save()
+            if not refund:
+                AccountTransactionHistory.objects.create(
+                    account=account, operation_type="I", ammount=ammount
+                )
+            else:
+                AccountTransactionHistory.objects.create(
+                    account=account, operation_type="C", ammount=ammount
+                )
+            return True
     else:
         raise ValueError("The ammount provided couldn't be added to the account")
 
 
-def create_transfer(origin: Account, destination: Account, ammount: int):
+
+def create_transfer(origin_id: Account, destination_id: Account, ammount: int):
     """
     To create a new money transfer we need to first check if the client can do so an then proceed to the transaction.
     If the money isn't credited, we need to rollback and restore the balance
     """
+
+    origin = Account.objects.get(id=origin_id)
+    destination = Account.objects.get(id=destination_id)
     try:
-        take_money(origin, ammount)
+        with transaction.atomic():
+            take_money(origin_id, ammount)
         try:
-            put_money(destination, ammount)
-            MoneyTransfer.objects.create(
-                origin=origin, destination=destination, ammount=ammount
-            )
-            return True
+            with transaction.atomic():
+                put_money(destination_id, ammount)
+                MoneyTransfer.objects.create(
+                    origin=origin, destination=destination, ammount=ammount
+                )
+                return True
         except ValueError as v:
             logger.error(
                 "Failed to credit money to account",
@@ -115,8 +128,9 @@ def create_transfer(origin: Account, destination: Account, ammount: int):
                 },
             )
             # Rollback operation
-            put_money(origin, ammount, refund=True)
-            raise ValueError("Failed to insert money on destination")
+            with transaction.atomic():
+                put_money(origin_id, ammount, refund=True)
+                raise ValueError("Failed to insert money on destination")
 
     except ValueError as v:
         logger.error(
@@ -129,6 +143,7 @@ def create_transfer(origin: Account, destination: Account, ammount: int):
             },
         )
         raise ValueError("Insufficient funds available")
+
 
 
 def cancel_transaction(transaction: MoneyTransfer):
@@ -146,7 +161,7 @@ def cancel_transaction(transaction: MoneyTransfer):
             raise AttributeError("Status is reverted already")
         else:
             create_transfer(
-                transaction.destination, transaction.origin, transaction.ammount
+                transaction.destination.id, transaction.origin.id, transaction.ammount
             )
     except:
         logger.error(

@@ -141,7 +141,7 @@ class AccountView(ModelViewSet):
             return Response(status=status.HTTP_403_NOT_AUTHORIZED)
 
         try:
-            services.create_transfer(source_account, target_account, ammount)
+            services.create_transfer(source_account.id, target_account.id, ammount)
             return Response(status=status.HTTP_200_OK)
         except ValueError:
             return Response(status=status.HTTP_400_BAD_REQUEST)
