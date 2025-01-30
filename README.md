@@ -27,7 +27,7 @@ This is a simple ledger application, allowing to create new financial accounts, 
 
 ```bash
 git clone <repository-url>
-cd higlobe_dev_test
+cd ledger_test
 ```
 
 ### 2. Set Up a Virtual Environment
@@ -88,11 +88,11 @@ README.md        # Project documentation
 
 1. Build the Docker image:
    ```bash
-   docker build -t higlobe_dev_test .
+   docker build -t ledger_test .
    ```
 2. Run the container:
    ```bash
-   docker run -d -p 8000:8000 --env-file .env higlobe_dev_test
+   docker run -d -p 8000:8000 --env-file .env ledger_test
    ```
 
 ### Manual Deployment
