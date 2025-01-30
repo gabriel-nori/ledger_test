@@ -1,12 +1,14 @@
 from apps.account import test_helpers as accountHelper
 from apps.account.test_helpers import TestObjects
 from apps.account.models import MoneyTransfer
+from django.db.utils import OperationalError
 from apps.account import services
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
 from datetime import date
+import threading
 
 
-class AccountTest(TestCase):
+class AccountTest(TransactionTestCase):
     def setUp(self):
         self.test_objects = TestObjects()
         self.test_objects.create()
@@ -154,3 +156,31 @@ class AccountTest(TestCase):
         services.cancel_transaction(transaction)
         # assert self.test_objects.maria_account.balance == transfer_ammount
         # assert self.test_objects.fernando_account.balance == 0
+
+
+    def test_multiple_requests_at_once(self):
+        """
+        This is a tricky test, but it is needed to ensure that the values are transfered correctly even if the method is called
+        twice in the same time window.
+        Since the test is using SQLite, we can have some lock problems during the test
+        """
+        ammount_to_be_taken = 1000
+        self.test_objects.maria_account.balance = ammount_to_be_taken
+        self.test_objects.maria_account.overdraft_limit = ammount_to_be_taken
+        self.test_objects.maria_account.overdraft_protection = False
+        self.test_objects.maria_account.save()
+
+        self.test_objects.fernando_account.balance = 0
+        self.test_objects.fernando_account.save()
+
+        maria1 = threading.Thread(target=services.take_money, args=(self.test_objects.maria_account.id, 1000))
+        maria2 = threading.Thread(target=services.take_money, args=(self.test_objects.maria_account.id, 1000))
+
+        maria1.start()
+        maria2.start()
+
+        maria1.join()
+        maria2.join()
+
+        self.test_objects.maria_account.refresh_from_db()
+        assert self.test_objects.maria_account.balance == -ammount_to_be_taken

@@ -188,5 +188,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 if "test" in sys.argv:
     DATABASES["default"] = {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": "mydatabase",
+        "NAME": "test_database",
+        "OPTIONS": {
+            "timeout": 20,
+        }
     }
