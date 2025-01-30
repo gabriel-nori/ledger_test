@@ -57,7 +57,7 @@ def take_money(account_id: Account, ammount: int, refund: bool = False) -> bool:
     elif account.overdraft_protection:
         raise ValueError("Value is above client balance")
     else:
-        if account.overdraft_limit + account.balance > ammount:
+        if account.overdraft_limit + account.balance >= ammount:
             account.balance -= ammount
         else:
             raise ValueError("Value is above client overdraft limit")
